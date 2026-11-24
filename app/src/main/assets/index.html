@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; frame-src 'none'; object-src 'none'"><title>AiKara</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="brand"><span class="mark"><i></i><i></i><i></i></span>AiKara<span class="personal">PERSONAL</span></div><button id="help" class="icon-button" aria-label="使い方">?</button></header>
+<main>
+<section id="sing" class="page">
+  <div class="eyebrow">YOUR VOICE, IN PITCH</div>
+  <div class="title-row"><div><h1 id="song-title">音階トレーニング</h1><p id="song-subtitle">オリジナル練習音源 · C4 – C5</p></div><button id="rename" class="small ghost">曲名</button></div>
+  <div id="source-entry" class="source-entry"><div class="input-row"><input id="youtube-url" type="url" placeholder="YouTube の URL を貼り付け" aria-label="YouTube URL" autocomplete="off"><button id="load-youtube" class="small primary">開く</button></div><div class="source-actions"><button id="search-youtube" class="text-button">YouTube で曲を探す ↗</button><button id="pick-local" class="text-button">端末の音源を選ぶ</button></div></div>
+  <div class="chart-card"><div class="chart-top"><span class="live-label" id="mic-state"><b></b>マイク OFF</span><div class="legend"><span class="guide-dot"></span>お手本 <span class="voice-dot"></span>歌声</div></div>
+    <div class="pitch-heading"><div><span id="current-note">—</span><small id="current-cents">声を出すと音程を表示</small></div><div class="score-number"><b id="score">—</b><span>音程一致率 %</span></div></div>
+    <div class="chart-wrap"><canvas id="pitch-chart" aria-label="お手本と歌声の音程グラフ"></canvas><div id="chart-empty" hidden>お手本は未登録です<br><small>歌声の音程はそのまま表示できます</small></div></div>
+    <div class="chart-bottom"><span id="range-label">C4 — C5</span><span id="score-detail">±50 cent・無音も判定</span></div>
+  </div>
+  <div class="timeline"><input id="seek" type="range" min="0" max="23" value="0" step="0.05" aria-label="再生位置"><div><span id="time-now">0:00</span><span id="time-end">0:23</span></div></div>
+  <div class="transport"><button id="rewind" class="round" aria-label="5秒戻す">↶<small>5</small></button><button id="play" class="play"><span>▶</span> 歌い始める</button><button id="mic-toggle" class="round mic" aria-label="マイクを切り替え">MIC</button></div>
+  <div class="input-meter"><span>入力</span><div><i id="level"></i></div><span id="input-db">— dB</span></div>
+  <div class="guide-card"><div><span class="eyebrow">MELODY GUIDE</span><h2>お手本の音程バー</h2><p id="guide-status">練習用の正確な音程データ</p></div><div class="guide-buttons"><button id="analyze" class="small">音源から推定</button><button id="import-guide" class="small ghost">データ読込</button></div><div id="analysis-state" hidden><progress id="analysis-progress" max="100" value="0"></progress><span id="analysis-text"></span><button id="cancel-analysis" class="text-button">中止</button></div></div>
+  <div class="tip"><span>◉</span><p>イヤホンを使用すると、伴奏の回り込みを減らせます。YouTube のカラオケ・オフボーカル動画を選んでください。</p></div>
+</section>
+<section id="library" class="page" hidden><div class="eyebrow">YOUR COLLECTION</div><h1>曲ライブラリ</h1><p class="description">読み込んだ曲と音程データを端末に保存。</p><div id="song-list"></div><button id="export-guide" class="wide">選択中の曲・音程データを書き出す</button><p class="fine">音源本体は含まれません。アプリを削除する前に、必要な音程データを書き出してください。</p></section>
+<section id="settings" class="page" hidden><div class="eyebrow">MAKE IT FIT</div><h1>調整・練習</h1>
+  <div class="setting-card"><h2>タイミング</h2><label for="guide-offset">お手本の開始位置 <output id="guide-offset-label">0.00 秒</output></label><div class="number-row"><button id="offset-minus">−0.1</button><input id="guide-offset" type="number" step="0.05" value="0" aria-label="お手本の開始位置 秒"><button id="offset-plus">+0.1</button></div><p class="fine">＋でお手本が遅く流れます。原曲と伴奏の前奏が異なる場合に調整します。</p>
+  <label for="latency">マイク・再生の遅れ補正 <output id="latency-label">100 ms</output></label><input id="latency" type="range" min="0" max="1000" step="10" value="100"><p class="fine">歌声の線を左へずらして補正します。Bluetooth は遅れが大きくなる場合があります。</p></div>
+  <div class="setting-card"><h2>入力・判定</h2><label for="gate">小さい音を無視 <output id="gate-label">−42 dB</output></label><input id="gate" type="range" min="-60" max="-20" value="-42" step="1"><label class="switch-label" for="octave"><span>オクターブ違いを許容</span><input id="octave" type="checkbox" checked></label><p class="fine">ON では 1 オクターブ上下も一致として判定。設定変更時は計測をリセットします。</p><button id="reset-score" class="wide ghost">音程一致率をリセット</button></div>
+  <div class="setting-card"><h2>キー変更</h2><div class="number-row"><button id="key-down">−</button><strong id="key-label">原曲</strong><button id="key-up">＋</button></div><p id="key-help" class="fine">端末音源の伴奏とお手本を一緒に移調。YouTube 再生では使用できません。</p></div>
+  <div class="setting-card"><h2>区間リピート</h2><div class="repeat-row"><button id="set-a">A を設定</button><button id="set-b">B を設定</button><button id="clear-loop" class="ghost">解除</button></div><p id="loop-label" class="fine">再生位置で A → B を設定すると繰り返します。</p></div>
+  <div class="setting-card"><h2>解析について</h2><p class="fine">音源解析は単旋律の音程推定です。歌声だけの音源に適しており、伴奏・和音・コーラスが入った曲では誤検出します。ボーカル分離、YouTube 音声抽出、歌詞の自動取得は搭載していません。</p><p class="fine">マイク音声は保存・送信せず、音程を端末内で処理します。YouTube 利用時は Google に接続します。</p><div class="source-actions"><button id="youtube-terms" class="text-button">YouTube 利用規約 ↗</button><button id="google-privacy" class="text-button">Google プライバシー ↗</button></div></div>
+</section>
+</main>
+<nav><button data-tab="sing" class="active"><span>♫</span>歌う</button><button data-tab="library"><span>▤</span>曲ライブラリ</button><button data-tab="settings"><span>☷</span>調整</button></nav>
+<div id="toast" role="status" hidden></div>
+<dialog id="help-dialog"><div class="eyebrow">QUICK START</div><h2>音程を見ながら歌う</h2><ol><li>YouTube の URL を開くか、端末の音源を選択。</li><li>「歌い始める」でマイクを許可。歌声の音程が表示されます。</li><li>お手本も出す場合は「音源から推定」で歌声入りの手持ち音源を読み込み。</li><li>前奏の長さが違う場合は「調整」で開始位置を合わせます。</li></ol><p class="fine">最初の音階トレーニングは、お手本付きですぐ試せます。YouTube の再生開始は、上部の動画をタップする必要がある場合があります。</p><button id="close-help" class="primary wide">始める</button></dialog>
+<dialog id="prompt-dialog"><h2 id="prompt-title"></h2><form method="dialog"><div class="input-row"><input id="prompt-input" autocomplete="off"></div><div class="source-actions"><button value="cancel" class="ghost">キャンセル</button><button value="ok" class="primary">決定</button></div></form></dialog>
+<script src="core.js"></script><script src="app.js"></script>
+</body></html>

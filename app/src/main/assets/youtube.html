@@ -1,0 +1,4 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><style>html,body,#player{margin:0;width:100%;height:100%;background:#000;overflow:hidden}</style></head><body><div id="player"></div><script>
+var player;function onYouTubeIframeAPIReady(){player=new YT.Player('player',{videoId:'__VIDEO_ID__',width:'100%',height:'100%',playerVars:{playsinline:1,origin:'https://jp.haruya.aikara',controls:1},events:{onError:function(e){PlayerEvents.error('__VIDEO_ID__',e.data);}}});}
+setInterval(function(){try{if(player&&player.getCurrentTime)PlayerEvents.tick('__VIDEO_ID__',player.getCurrentTime(),player.getDuration(),player.getPlayerState());}catch(e){}},80);
+</script><script src="https://www.youtube.com/iframe_api"></script></body></html>
